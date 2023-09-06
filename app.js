@@ -1,22 +1,24 @@
 const http = require('http')
+const fs = require('fs')
 
 const server = http.createServer((req,resp)=>{
     //console.log(req.url,req.method,req.headers)
     //process.exit()
-
-    resp.setHeader('Content-Type','text/html')
+    if(req.url == '/')
+{
     resp.write('<html>')
     resp.write('<head><title>My first page</title></head>')
-    if(req.url == '/')
-    resp.write('<body><h1>Welcome to my Node Js project</h1></body>')
-    else if(req.url == '/home')
-    resp.write('<body><h1>Welcome home</h1></body>')
-    else if(req.url == '/about')
-    resp.write('<body><h1>Welcome to About Us page</h1></body>')
-    else if(req.url == '/node')
-    resp.write('<body><h1>Welcome to my Node Js projectt</h1></body>')
+    resp.write('<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">SUBMIT</button></body>')
     resp.write('</html>')
-    resp.end();
+    return resp.end();
+}
+    else if(req.url == '/message' && req.method == 'POST'){
+        resp.write('<body><h1>Message</h1></body>')
+        fs.writeFileSync('message.txt','DUMMY')
+        resp.statusCode = 302
+        resp.setHeader('Location', '/')
+        return resp.end()
+    }
 })
 
 server.listen(3000)
